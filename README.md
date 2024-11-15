@@ -39,9 +39,9 @@ react-native-safe-area-context `
 react-native-web `
 react-dom `
 @expo/metro-runtime `
-@react-navigation/native `
-@react-navigation/bottom-tabs `
-@react-navigation/stack `
+@react-navigation/native@^6.1.18 `
+@react-navigation/bottom-tabs@^6.6.1 `
+@react-navigation/stack@^6.4.1 `
 react-native-screens
 ```
 
@@ -158,7 +158,9 @@ npm install expo@latest
 
 > Stage and commit "Add screens and navigators with basic layout"
 
-## 5. Code fetch functions in `utils/api.js` file
+## 5. Code Data Processing
+
+### Code fetch functions in `utils/api.js` file
 
 - in `api.js` file write code to call asynchronously the api using `fetch` method
   - `export async function fetchDepartments()`
@@ -168,9 +170,68 @@ npm install expo@latest
   - `export async function updatePerson(id, updatedData)`
   - `export async function deletePerson(id)`
 
-## 6. Retrieve the data in the Screens
+### Retrieve the data in the Screens
 
-- Use `useState` to store the retrieved data
-- Use `useEffect` to retrieve the data by calling the api function from the `api.js`
-- `Staff directory` screen should retrieve all records
-- `View`, `Edit`, and `Update` screens should retrieve one record by `ID`
+#### PeopleViewScreen
+
+- Implement `useState` to store the retrieved data [people] default value ([])
+- Implement `useState` to store the offline state [offline] default value (false)
+- Implement `useState` to store the error string [error] default value (null)
+- Implement `useState` to store the dialog visibility [visible]  default value (false)
+- Implement `useState` to store the current selected record id [selectedPersonId] default value (null)
+- Implement `useState` to store the current selected record name [selectedPersonName] default value ("")
+- Implement `useEffect` to retrieve the data [`fetchPeople`] by calling the api function from the `api.js`
+- inside `useEffect` store the retrieved using `setPeople`
+- Inside the catch block set the offline and error state
+- Use map to list the data like `{people.map(person => (<Text key={person.id}>{person.name}</Text>))}`
+- Add show functions that navigate to other screens
+  - `showAddPerson()`
+  - `showEditPerson(id)`
+  - `showViewPerson(id)`
+- Add delete function
+  - `handleDelete()`
+- To handle dialog visibility Add:
+  - `showDialog(id, name)`
+  - `hideDialog()`
+
+### PersonViewScreen
+
+- Implement `useState` to store the retrieved data [person]  default value (null)
+- Implement `useState` to store the offline state [offline] default value (false)
+- Implement `useState` to store the error string [error] default value (null)
+- Implement `useEffect` to retrieve the data [`fetchPersonById`] by calling the api function from the `api.js`
+- inside `useEffect` store the retrieved using `setPerson`
+- Inside the catch block set the offline and error state
+- Add show functions that navigate to other screens
+  - `showPeopleView()` to go back to `PeopleViewScreen`
+
+### PersonEditScreen
+
+- Implement `useState` to store the retrieved data [person]
+- Implement `useState` to store the retrieved data [departments] default value ([])
+- Implement `useState` to store the offline state [offline] default value (false)
+- Implement `useState` to store the error string [error] default value (null)
+- Implement `useEffect` to retrieve the data [`fetchDepartments`,`fetchPersonById`] by calling the api function from the `api.js`
+- inside `useEffect` store the retrieved using `setPerson`
+- Inside the catch block set the offline and error state
+- Add show functions that navigate to other screens
+  - `showPeopleView()` to go back to `PeopleViewScreen`
+- Add submit function to save or add record
+  - `handleSubmit()`
+
+`[person, setPerson] = useState` default value is
+
+```bash
+{
+    name: "",
+    phone: "",
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+    country: "",
+    departmentId: null,
+  }
+```
+
+> Stage and commit "Update navigation and screens; refactor dependencies and add API utility functions"
