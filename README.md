@@ -1,8 +1,15 @@
 # SKY24 Project
 
+## Useful Links
+
+- [Expo](https://docs.expo.dev/get-started/create-a-project/)
+- [Expo Vector Icons](https://docs.expo.dev/guides/icons/)
+- [icons.expo.fyi](https://icons.expo.fyi/Index)
+- [React Native Paper](https://reactnativepaper.com/)
+
 ## 1. Create Expo application
 
-1.1 Create react-native application using [Expo](https://docs.expo.dev/get-started/create-a-project/)
+1.1 Create react-native application using:
 
 ```bash
 npx create-expo-app@latest --template
@@ -54,7 +61,7 @@ npm install concurrently --save-dev
 4. Update `package.json` by adding the following lines to **scripts**
 
 ```json
-    "seed": "cd server && npm i && npm run seed",
+    ,"seed": "cd server && npm i && npm run seed",
     "start:server": "cd server && npm start",
     "dev": "concurrently \"npm run web\" \"npm run start:server\""
 ```
@@ -92,13 +99,48 @@ npm install expo@latest
 
 3.3 Create 3 files for your navigators, `Root`, `Main`, `People` (or any name you like `Staff`, `Employees`)
 
+```bash
+|- navigation
+    |- RootNavigator.js
+    |- MainNavigator.js
+    |- PeopleNavigator.js
+```
+
 3.4 Create Screens file in screens folder for `Home`, `Help`, `Not found`, `New & Edit`, `View`, and `List` records (6 screens)
+
+```bash
+|- screens
+    |- HomeScreen.js
+    |- HelpScreen.js
+    |- NotFoundScreen.js
+    |- PeopleViewScreen.js
+    |- PersonViewScreen.js
+    |- PersonEditScreen.js
+```
 
 3.5 Create file `api.js` in the `utils` folder for fetching data from the server
 
-> Stage and commit "Initialize server with navigators for managing people and departments"
+```bash
+|- utils
+    |- api.js
+```
 
-## 4. Code Navigators
+3.6 Map screens to navigators as following:
+
+```bash
+|- navigation
+    |- RootNavigator.js (Stack)
+      |- MainNavigator.js (Tab)
+          |- HomeScreen.js
+          |- PeopleNavigator.js (Stack)
+              |- PeopleViewScreen.js
+              |- PersonViewScreen.js
+              |- PersonEditScreen.js
+          |- HelpScreen.js
+      |- NotFoundScreen.js
+```
+
+## 4. Code Navigators & Basic Screens Layout
 
 - First navigator to be injected in the `App.js` is the `RootNavigator`
 - `NavigationContainer` component should surround `RootNavigator` when injected in the `App.js`
@@ -107,26 +149,24 @@ npm install expo@latest
 - `PeopleNavigator` is the second child in `MainNavigator` where `HomeScreen` is the first, and `HelpScreen` is the last
 - Import all required screens and navigators
 - Icon name in small letter
-- `component` value is the screen name
+- `component` value is the screen file name
 - `name` attribute is the ID of the screen that can be used in navigation
-- Use `createMaterialBottomTabNavigator` instead of `createBottomTabNavigator`
+- Create basic screens layout
+- Run the add `npm run dev`
+
+![](Images/JH_2024-11-15-13-44-05.png)
 
 > Stage and commit "Add screens and navigators with basic layout"
-
-- Run the add `npm run dev`
-- You should have the following screenshot
-
-![](Images/JH_2024-11-14-14-43-14.png)
 
 ## 5. Code fetch functions in `utils/api.js` file
 
 - in `api.js` file write code to call asynchronously the api using `fetch` method
-  - `export async function fetchCategories()`
-  - `export async function fetchProducts()`
-  - `export async function fetchProductById(id)`
-  - `export async function addProduct(productData)`
-  - `export async function updateProduct(id, updatedData)`
-  - `export async function deleteProduct(id)`
+  - `export async function fetchDepartments()`
+  - `export async function fetchPeople()`
+  - `export async function fetchPersonById(id)`
+  - `export async function addPerson(personData)`
+  - `export async function updatePerson(id, updatedData)`
+  - `export async function deletePerson(id)`
 
 ## 6. Retrieve the data in the Screens
 
