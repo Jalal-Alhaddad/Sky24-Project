@@ -101,9 +101,9 @@ npm install expo@latest
 
 ```bash
 |- navigation
-    |- RootNavigator.js
-    |- MainNavigator.js
-    |- PeopleNavigator.js
+    |- RootNavigator.js     [Stack Navigator]
+    |- MainNavigator.js     [Tab Navigator]
+    |- PeopleNavigator.js   [Stack Navigator]
 ```
 
 3.4 Create Screens file in screens folder for `Home`, `Help`, `Not found`, `New & Edit`, `View`, and `List` records (6 screens)
@@ -125,21 +125,6 @@ npm install expo@latest
     |- api.js
 ```
 
-3.6 Map screens to navigators as following:
-
-```bash
-|- navigation
-    |- RootNavigator.js (Stack)
-      |- MainNavigator.js (Tab)
-          |- HomeScreen.js
-          |- PeopleNavigator.js (Stack)
-              |- PeopleViewScreen.js
-              |- PersonViewScreen.js
-              |- PersonEditScreen.js
-          |- HelpScreen.js
-      |- NotFoundScreen.js
-```
-
 ## 4. Code Navigators & Basic Screens Layout
 
 - First navigator to be injected in the `App.js` is the `RootNavigator`
@@ -149,12 +134,39 @@ npm install expo@latest
 - `PeopleNavigator` is the second child in `MainNavigator` where `HomeScreen` is the first, and `HelpScreen` is the last
 - Import all required screens and navigators
 - Icon name in small letter
-- `component` value is the screen file name
+- `component` value is the screen file name **without extension**
 - `name` attribute is the ID of the screen that can be used in navigation
 - Create basic screens layout
 - Run the add `npm run dev`
 
 ![](Images/JH_2024-11-15-13-44-05.png)
+
+### Map screens to navigators as following:
+
+```bash
+|- navigation
+    |- RootNavigator.js (Stack Navigator)
+      |- MainNavigator.js (Tab Navigator)
+          |- HomeScreen.js
+          |- PeopleNavigator.js (Stack Navigator)
+              |- PeopleViewScreen.js
+              |- PersonViewScreen.js
+              |- PersonEditScreen.js
+          |- HelpScreen.js
+      |- NotFoundScreen.js
+```
+
+- **RootNavigator = Stack Navigator**
+  - Screen name="Main" = MainNavigator
+  - Screen name="NotFound" = NotFoundScreen
+- **MainNavigator = Tab Navigator**
+  - Screen name='Home' = HomeScreen
+  - Screen name='People' = PeopleNavigator
+  - Screen name='Help' = HelpScreen
+- **PeopleNavigator = Stack Navigator**
+  - Screen name="PeopleView" = PeopleViewScreen
+  - Screen name="PersonView" = PersonViewScreen
+  - Screen name="PersonEdit" = PersonEditScreen
 
 > Stage and commit "Add screens and navigators with basic layout"
 
@@ -170,9 +182,9 @@ npm install expo@latest
   - `export async function updatePerson(id, updatedData)`
   - `export async function deletePerson(id)`
 
-### Retrieve the data in the Screens
+### Handle data in the Screens
 
-#### PeopleViewScreen
+#### In PeopleViewScreen
 
 - Implement `useState` to store the retrieved data [people] default value ([])
 - Implement `useState` to store the offline state [offline] default value (false)
@@ -184,17 +196,13 @@ npm install expo@latest
 - inside `useEffect` store the retrieved using `setPeople`
 - Inside the catch block set the offline and error state
 - Use map to list the data like `{people.map(person => (<Text key={person.id}>{person.name}</Text>))}`
-- Add show functions that navigate to other screens
-  - `showAddPerson()`
-  - `showEditPerson(id)`
-  - `showViewPerson(id)`
 - Add delete function
-  - `handleDelete()`
+  - `handleDelete()` to call `deletePerson` form `api.js`
 - To handle dialog visibility Add:
   - `showDialog(id, name)`
   - `hideDialog()`
 
-### PersonViewScreen
+### In PersonViewScreen
 
 - Implement `useState` to store the retrieved data [person]  default value (null)
 - Implement `useState` to store the offline state [offline] default value (false)
@@ -202,10 +210,8 @@ npm install expo@latest
 - Implement `useEffect` to retrieve the data [`fetchPersonById`] by calling the api function from the `api.js`
 - inside `useEffect` store the retrieved using `setPerson`
 - Inside the catch block set the offline and error state
-- Add show functions that navigate to other screens
-  - `showPeopleView()` to go back to `PeopleViewScreen`
 
-### PersonEditScreen
+### In PersonEditScreen
 
 - Implement `useState` to store the retrieved data [person]
 - Implement `useState` to store the retrieved data [departments] default value ([])
@@ -214,8 +220,6 @@ npm install expo@latest
 - Implement `useEffect` to retrieve the data [`fetchDepartments`,`fetchPersonById`] by calling the api function from the `api.js`
 - inside `useEffect` store the retrieved using `setPerson`
 - Inside the catch block set the offline and error state
-- Add show functions that navigate to other screens
-  - `showPeopleView()` to go back to `PeopleViewScreen`
 - Add submit function to save or add record
   - `handleSubmit()`
 
@@ -235,3 +239,22 @@ npm install expo@latest
 ```
 
 > Stage and commit "Update navigation and screens; refactor dependencies and add API utility functions"
+
+## Implement Navigation Code
+
+### PeopleViewScreen navigation code
+
+- Add show functions that navigate to other screens
+  - `showAddPerson()` navigate to `PersonEditScreen` with `id = -1` for new record
+  - `showEditPerson(id)` navigate to `PersonEditScreen` with selected record id for update record
+  - `showViewPerson(id)` navigate to `PersonViewScreen` with selected record
+
+### PersonViewScreen navigation code
+
+- Add show functions that navigate to other screens
+  - `showPeopleView()` to go back to `PeopleViewScreen`
+
+### PersonEditScreen navigation code
+
+- Add show functions that navigate to other screens
+  - `showPeopleView()` to go back to `PeopleViewScreen`
